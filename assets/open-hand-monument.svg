@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220" width="160" height="220">
+  <defs>
+    <linearGradient id="handGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE" />
+      <stop offset="50%" stop-color="#4285F4" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <!-- Base Stand Frame -->
+  <rect x="50" y="140" width="60" height="70" fill="none" stroke="url(#handGrad)" stroke-width="6" rx="4"/>
+  <line x1="80" y1="140" x2="80" y2="80" stroke="url(#handGrad)" stroke-width="8"/>
+  <!-- Open Hand Palm & Fingers -->
+  <path d="M 80 80 C 40 70, 20 40, 25 15 C 30 5, 45 10, 55 25 C 60 10, 75 10, 80 25 C 85 10, 100 10, 105 25 C 115 10, 130 15, 135 30 C 140 50, 110 70, 80 80 Z" fill="url(#handGrad)" opacity="0.95"/>
+</svg>

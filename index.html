@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>DevFest & CCD Post Generator | GDG Chandigarh</title>
+
+  <link rel="icon" type="image/svg+xml" href="assets/gdg-logo.svg">
+
+  <link rel="stylesheet" href="style.css?v=20261002">
+
+
+</head>
+<body>
+
+  <!-- Tech Grid Background Overlay -->
+  <div class="bg-grid"></div>
+
+  <!-- Main App Container -->
+  <div class="app-container">
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+      <div class="brand-logos">
+        <img src="assets/gdg-cloud-logo.svg" alt="GDG Chandigarh" class="brand-logo-img">
+
+    
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">Create Your DevFest / CCD Post </h1>
+      <p class="hero-subtitle">
+        Add your name and photo. We'll create your personalized DevFest or Cloud Community Day social poster.
+      </p>
+    </section>
+
+    <!-- Generator Grid Section -->
+    <main class="generator-grid" id="generatorSection">
+
+      <!-- LEFT COLUMN: Input Controls -->
+      <div class="glass-card">
+
+        <!-- Step 1: Template Selection (2 Exact Poster Templates) -->
+        <div class="form-group">
+          <label class="form-label">
+            <span class="step-indicator">1</span> Select Event Poster Template
+          </label>
+          <div class="template-options" style="grid-template-columns: 1fr 1fr;">
+            
+            <label class="template-card active" data-template="devfest">
+              <input type="radio" name="templateChoice" value="devfest" checked>
+              <span class="template-card-title">DevFest Chandigarh</span>
+              <span class="template-card-badge">24 Oct 2026 </span>
+            </label>
+
+            <label class="template-card" data-template="ccd">
+              <input type="radio" name="templateChoice" value="ccd">
+              <span class="template-card-title">Cloud Community Day</span>
+              <span class="template-card-badge">23 Oct 2026 </span>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Step 2: Name Input -->
+        <div class="form-group">
+          <label for="participantName" class="form-label">
+            <span class="step-indicator">2</span> Your Name
+          </label>
+          <input 
+            type="text" 
+            id="participantName" 
+            class="input-text" 
+            placeholder="Enter your full name" 
+            maxlength="30"
+            autocomplete="off"
+            value="Alex Developer"
+          >
+        </div>
+
+        <!-- Step 3: Photo Upload -->
+        <div class="form-group">
+          <label class="form-label">
+            <span class="step-indicator">3</span> Your Photo
+          </label>
+
+          <!-- Dropzone -->
+          <div class="dropzone" id="dropzone">
+            <svg class="dropzone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <div id="dropzonePrompt">
+              <div class="dropzone-title">Upload your photo</div>
+              <div class="dropzone-desc">Drag & drop or click to browse (PNG, JPG, WEBP)</div>
+            </div>
+            <input type="file" id="imageFileInput" accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;">
+          </div>
+
+          <!-- Error Message Box -->
+          <div class="error-box" id="errorBox"></div>
+
+          <!-- Sample Avatars -->
+          <div class="preset-avatars">
+            <span class="preset-avatars-label">Or use sample avatar:</span>
+            <button type="button" class="avatar-preset-btn" data-src="assets/default-avatar.svg" title="Sample Avatar" style="background-image: url('assets/default-avatar.svg');"></button>
+          </div>
+
+          <!-- Crop & Framing Sliders -->
+          <div class="image-controls" id="imageControls" style="display: block;">
+            <div class="control-row">
+              <span class="control-label">Zoom:</span>
+              <input type="range" id="zoomSlider" class="range-slider" min="0.8" max="2.5" step="0.05" value="1.0">
+            </div>
+            <div class="control-row">
+              <span class="control-label">Pan X:</span>
+              <input type="range" id="panXSlider" class="range-slider" min="-200" max="200" step="2" value="0">
+            </div>
+            <div class="control-row">
+              <span class="control-label">Pan Y:</span>
+              <input type="range" id="panYSlider" class="range-slider" min="-200" max="200" step="2" value="0">
+            </div>
+            <div class="control-row" style="justify-content: flex-end;">
+              <button type="button" class="btn-icon-small" id="resetImageBtn">Reset Framing</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button type="button" class="btn-primary" id="generateBtn">
+          <span>Generate My Post</span> 🚀
+        </button>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Live Post Preview & Actions -->
+      <div class="preview-container">
+        
+        <div class="canvas-wrapper">
+          <!-- Main 1080x1350 Canvas -->
+          <canvas id="postCanvas"></canvas>
+          
+          <!-- Loading Overlay -->
+          <div class="canvas-loading" id="canvasLoading">
+            <div class="spinner"></div>
+            <span style="font-weight: 700;">Rendering Poster Design...</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons Bar -->
+        <div class="action-buttons-grid">
+          <button type="button" class="btn-primary btn-accent" id="downloadBtn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download PNG
+          </button>
+          
+          <button type="button" class="btn-secondary" id="copyCaptionBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+            </svg>
+            Copy Caption
+          </button>
+
+          <button type="button" class="btn-secondary" id="nativeShareBtn" style="display: none;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+            </svg>
+            Share Poster
+          </button>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Editable Campaign Caption Section -->
+    <section class="glass-card caption-card">
+      <h2 class="card-title">
+        <span>💬</span> Campaign Social Caption
+      </h2>
+      <textarea id="captionTextarea" class="caption-textarea" spellcheck="false"></textarea>
+      
+      <div class="social-share-bar">
+        <span style="font-size: 0.85rem; font-weight: 600;">Share directly:</span>
+        
+        <button type="button" class="btn-social btn-linkedin" id="shareLinkedInBtn">
+          LinkedIn
+        </button>
+
+        <button type="button" class="btn-social btn-x" id="shareXBtn">
+          X (Twitter)
+        </button>
+
+        <button type="button" class="btn-social btn-whatsapp" id="shareWhatsAppBtn">
+          WhatsApp
+        </button>
+      </div>
+    </section>
+
+    <!-- Campaign & Swag Section -->
+    <section class="campaign-section">
+      <h2 style="font-size: 1.5rem; font-weight: 800;">
+        Generate → Post → Share → Get Engagement → Win Swag 🎁
+      </h2>
+      <p style="margin-top: 0.5rem;">
+        Create your personalized DevFest / CCD post, share it on your social media and tag/mention us.
+      </p>
+
+      <div class="campaign-steps">
+        <div class="campaign-step-item">
+          <div class="step-num">🎨</div>
+          <div class="step-title">1. Generate</div>
+        </div>
+        <div class="campaign-step-item">
+          <div class="step-num">📥</div>
+          <div class="step-title">2. Download</div>
+        </div>
+        <div class="campaign-step-item">
+          <div class="step-num">📢</div>
+          <div class="step-title">3. Post & Tag</div>
+        </div>
+        <div class="campaign-step-item">
+          <div class="step-num">🎁</div>
+          <div class="step-title">4. Win Swag</div>
+        </div>
+      </div>
+
+      <div class="campaign-note">
+        * Note: Campaign participation and swag eligibility are subject to official GDG CLOUD Chandigarh campaign guidelines.
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Scripts -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
