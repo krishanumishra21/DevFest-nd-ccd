@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Exact filenames from the assets folder.
-  devfestOriginalImg.src = './assets/devfest-original.jpg';
+  devfestOriginalImg.src = './assets/devfest-original.png';
   ccdOriginalImg.src = './assets/ccd-original.png';
   defaultAvatarImg.src = './assets/default-avatar.svg';
 
@@ -389,10 +389,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.drawImage(devfestOriginalImg, 0, 0, baseW, baseH);
 
     // Step 2: Draw Participant Photo Inside Bounding Box (x: 160, y: 256, w: 187, h: 247, r: 20)
-    const photoX = 210;
-    const photoY = 256;
-    const photoW = 270;
-    const photoH = 245;
+    const photoX = 300;
+    const photoY = 450;
+    const photoW = 400;
+    const photoH = 400;
     const photoR = 20;
 
     ctx.save();
@@ -409,10 +409,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Step 3: Draw Clean White Name Pill covering original [PARTICIPANT NAME] text
     // Pixel-precise: original pill spans x=57..458, y=484..525
-    const nameX = 100;
-    const nameY = 510;
-    const nameW = 440;
-    const nameH = 42;
+    const nameX = 260;
+    const nameY = 880;
+    const nameW = 480;
+    const nameH = 50;
     const nameR = 21;
     const centerX = nameX + nameW / 2;
 
@@ -425,11 +425,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    let fontSize = 18;
+    let fontSize = 30;
     if (name.length > 20) fontSize = 13;
     else if (name.length > 15) fontSize = 15;
 
-    ctx.font = `900 ${fontSize}px "Plus Jakarta Sans", "Inter", sans-serif`;
+   ctx.font = `bold ${fontSize}px "Arial Black", sans-serif`;
     ctx.fillText(name.toUpperCase(), centerX, nameY + nameH / 2 + 1);
     ctx.restore();
 
@@ -439,73 +439,135 @@ document.addEventListener('DOMContentLoaded', () => {
   /* --------------------------------------------------------------------------
      2. Cloud Community Day Poster (682 x 1024 Base Template, Scaled 2x = 1364 x 2048)
      -------------------------------------------------------------------------- */
-  function renderCCDExactTemplate(name) {
-    if (!ccdOriginalImg.complete || ccdOriginalImg.naturalWidth === 0) return;
+function renderCCDExactTemplate(name) {
+  if (
+    !ccdOriginalImg.complete ||
+    ccdOriginalImg.naturalWidth === 0
+  ) return;
 
-    const scaleFactor = 2.0;
-    const baseW = ccdOriginalImg.naturalWidth;   // 682
-    const baseH = ccdOriginalImg.naturalHeight;  // 1024
+  const scaleFactor = 2.0;
 
-    postCanvas.width = baseW * scaleFactor;
-    postCanvas.height = baseH * scaleFactor;
+  const baseW = ccdOriginalImg.naturalWidth;
+  const baseH = ccdOriginalImg.naturalHeight;
 
-    ctx.save();
-    ctx.scale(scaleFactor, scaleFactor);
+  postCanvas.width = baseW * scaleFactor;
+  postCanvas.height = baseH * scaleFactor;
 
-    // Step 1: Draw Official Original CCD Flyer Background
-    ctx.drawImage(ccdOriginalImg, 0, 0, baseW, baseH);
+  ctx.save();
+  ctx.scale(scaleFactor, scaleFactor);
 
-    // Step 2: Draw Participant Photo Inside Bounding Box (x: 198, y: 248, w: 286, h: 218, r: 20)
-    const photoX = 140;
-    const photoY = 248;
-    const photoW = 300;
-    const photoH = 218;
-    const photoR = 20;
+  // Background
+  ctx.drawImage(
+    ccdOriginalImg,
+    0,
+    0,
+    baseW,
+    baseH
+  );
 
-    ctx.save();
-    drawRoundedRect(ctx, photoX, photoY, photoW, photoH, photoR);
-    ctx.fillStyle = '#E2E8F0';
-    ctx.fill();
-    ctx.clip(); // Clip photo inside frame
 
-    const imgToDraw = userImage || defaultAvatarImg;
-    if (imgToDraw && imgToDraw.complete) {
-      drawCoverImage(imgToDraw, photoX, photoY, photoW, photoH, userImageTransform);
-    }
-    ctx.restore();
+  // ==========================================================
+  // CCD PHOTO
+  // ==========================================================
 
-    // Step 3: Draw Clean White Name Pill covering original [PARTICIPANT NAME] text
-    // Pixel-precise: original pill spans x=178..504, y=506..548
-    const nameX = 90;
-    const nameY = 482;
-    const nameW = 340;
-    const nameH = 43;
-    const nameR = 8;
-    const centerX = nameX + nameW / 2;
+  const photoX = 332;
+  const photoY = 480;
+  const photoW = 360;
+  const photoH = 360;
+  const photoR = 20;
 
-    ctx.save();
-    drawRoundedRect(ctx, nameX, nameY, nameW, nameH, nameR);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fill(); // Fill solid white pill to fully cover placeholder text
+  ctx.save();
 
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#3B82F6';
-    ctx.stroke();
+  drawRoundedRect(
+    ctx,
+    photoX,
+    photoY,
+    photoW,
+    photoH,
+    photoR
+  );
 
-    ctx.fillStyle = '#0F2B5B';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#E2E8F0';
+  ctx.fill();
 
-    let fontSize = 20;
-    if (name.length > 20) fontSize = 14;
-    else if (name.length > 15) fontSize = 17;
+  ctx.clip();
 
-    ctx.font = `900 ${fontSize}px "Plus Jakarta Sans", "Inter", sans-serif`;
-    ctx.fillText(name.toUpperCase(), centerX, nameY + nameH / 2 + 1);
-    ctx.restore();
+  const imgToDraw =
+    userImage || defaultAvatarImg;
 
-    ctx.restore();
+  if (
+    imgToDraw &&
+    imgToDraw.complete
+  ) {
+    drawCoverImage(
+      imgToDraw,
+      photoX,
+      photoY,
+      photoW,
+      photoH,
+      userImageTransform
+    );
   }
+
+  ctx.restore();
+
+
+  // ==========================================================
+  // CCD NAME
+  // ==========================================================
+
+  const nameX = 228;
+  const nameY = 843;
+  const nameW = 550;
+  const nameH = 75;
+  const nameR = 21;
+
+  const centerX =
+    nameX + nameW / 2;
+
+  ctx.save();
+
+  drawRoundedRect(
+    ctx,
+    nameX,
+    nameY,
+    nameW,
+    nameH,
+    nameR
+  );
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fill();
+
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#3B82F6';
+  ctx.stroke();
+
+  ctx.fillStyle = '#0F2B5B';
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  let fontSize = 30;
+
+  if (name.length > 20) {
+    fontSize = 14;
+  } else if (name.length > 15) {
+    fontSize = 17;
+  }
+
+ ctx.font = `bold ${fontSize}px "Arial Black", sans-serif`;
+
+  ctx.fillText(
+    name.toUpperCase(),
+    centerX,
+    nameY + nameH / 2 + 1
+  );
+
+  ctx.restore();
+
+  ctx.restore();
+}
 
   /* ==========================================================================
      Canvas Draw Helpers
